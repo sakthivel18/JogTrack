@@ -70,7 +70,7 @@ public class NewJogFragment extends Fragment {
     }
 
     EditText editTextJogTitle;
-    Button buttonStartJog, buttonStopJog;
+    Button buttonStartJog, buttonStopJog, buttonCancelJog;
     ConstraintLayout mapsFragmentContainter;
     String jogTitle;
 
@@ -81,10 +81,21 @@ public class NewJogFragment extends Fragment {
         editTextJogTitle = view.findViewById(R.id.editTextJogTitle);
         buttonStartJog = view.findViewById(R.id.buttonStartJog);
         buttonStopJog = view.findViewById(R.id.buttonStopJog);
+        buttonCancelJog = view.findViewById(R.id.buttonCancelJog);
         mapsFragmentContainter = view.findViewById(R.id.mapsFragmentContainter);
 
         mapsFragmentContainter.setVisibility(View.INVISIBLE);
         buttonStopJog.setVisibility(View.INVISIBLE);
+
+        buttonCancelJog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.containerView, new JogsFragment())
+                        .commit();
+            }
+        });
 
         buttonStartJog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +115,7 @@ public class NewJogFragment extends Fragment {
                 } else {
                     editTextJogTitle.setVisibility(View.INVISIBLE);
                     buttonStartJog.setVisibility(View.INVISIBLE);
+                    buttonCancelJog.setVisibility(View.INVISIBLE);
                     mapsFragmentContainter.setVisibility(View.VISIBLE);
                     buttonStopJog.setVisibility(View.VISIBLE);
 

@@ -64,7 +64,8 @@ public class ViewJogMapsFragment extends Fragment {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
             mMap = googleMap;
             Jog trip = mJog;
-
+            mMap.getUiSettings().setZoomGesturesEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
             PolylineOptions options = new PolylineOptions();
             options.clickable(true);
             options.color(Color.BLUE);
