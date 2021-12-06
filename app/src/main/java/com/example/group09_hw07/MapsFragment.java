@@ -124,7 +124,10 @@ public class MapsFragment extends Fragment {
                 super.onLocationResult(locationResult);
                 if (locationResult == null)
                     return;
+
+
                 for (Location location : locationResult.getLocations()) {
+                    Log.d(TAG, "onLocationResult: " + location);
                     LatLng latLng= new LatLng(location.getLatitude(), location.getLongitude());
                     points.add(new GeoPoint(location.getLatitude(), location.getLongitude()));
                     polylineOptions.add(latLng);
@@ -170,9 +173,11 @@ public class MapsFragment extends Fragment {
 
     }
 
-    @SuppressLint("MissingSuperCall")
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         if (requestCode == REQUEST_CODE_FINE_LOCATION) {
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -215,7 +220,7 @@ public class MapsFragment extends Fragment {
     }
 
 
-    private void zoomToUserLocation() {
+    public void zoomToUserLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
