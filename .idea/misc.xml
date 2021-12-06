@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/fragment_create_new_account.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/fragment_jogs.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/fragment_login.xml" value="0.2" />
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/fragment_maps.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/fragment_new_jog.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/fragment_view_jog.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/fragment_view_jog_maps.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Sakthivel/AndroidStudioProjects/Group09_HW07/app/src/main/res/layout/jogs_list_item.xml" value="0.25416666666666665" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2682291666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
