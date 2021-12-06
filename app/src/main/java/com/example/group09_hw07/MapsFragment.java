@@ -236,109 +236,104 @@ public class MapsFragment extends Fragment {
     }
 
     public void startLocationUpdates() {
-        // zoomToUserLocation();
-        points.clear();
-        //startLocation = userLocation;
-        polylineOptions =  new PolylineOptions();
-        polylineOptions.color(Color.BLUE);
-        mMap.clear();
-        //mMap.addMarker(new MarkerOptions().position(startLocation).title("Start Location"));
-        LocationSettingsRequest request = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest).build();
-        SettingsClient client = LocationServices.getSettingsClient(getContext());
+        try {
+            points.clear();
+            polylineOptions =  new PolylineOptions();
+            polylineOptions.color(Color.BLUE);
+            mMap.clear();
+            LocationSettingsRequest request = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(locationRequest).build();
+            SettingsClient client = LocationServices.getSettingsClient(getContext());
 
-        Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
+            Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings(request);
 
-        locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+            locationSettingsResponseTask.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+                @Override
+                public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
                 }
-                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-            }
-        });
+            });
 
-        locationSettingsResponseTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if(e instanceof ResolvableApiException) {
-                    ResolvableApiException apiException = (ResolvableApiException) e;
-                    try {
-                        apiException.startResolutionForResult(getActivity(), 1234);
-                    } catch (IntentSender.SendIntentException ex) {
-                        ex.printStackTrace();
+            locationSettingsResponseTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if(e instanceof ResolvableApiException) {
+                        ResolvableApiException apiException = (ResolvableApiException) e;
+                        try {
+                            apiException.startResolutionForResult(getActivity(), 1234);
+                        } catch (IntentSender.SendIntentException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (Exception ex) {
+            Log.d(TAG, "startLocationUpdates: " + ex.getMessage());
+        }
+
     }
 
     FirebaseFirestore db;
     FirebaseAuth mAuth;
 
     public void stopLocationUpdates(String title) {
-        if(endLocation == null)
-            return;
-        mMap.addMarker(new MarkerOptions().position(endLocation).title("End location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, 12));
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        try {
+            if(endLocation == null)
+                return;
+            mMap.addMarker(new MarkerOptions().position(new LatLng(points.get(0).getLatitude(),points.get(0).getLongitude())).title("Start location"));
+            mMap.addMarker(new MarkerOptions().position(endLocation).title("End location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endLocation, 12));
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
+            db = FirebaseFirestore.getInstance();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if(currentUser == null) return;
+            if(currentUser == null) return;
 
-        Map<String, Object> jog = new HashMap<>();
-        jog.put("title", title);
-        jog.put("uid", currentUser.getUid());
-        jog.put("username", currentUser.getDisplayName());
-        jog.put("points", points);
-        jog.put("createdAt", FieldValue.serverTimestamp());
+            Map<String, Object> jog = new HashMap<>();
+            jog.put("title", title);
+            jog.put("uid", currentUser.getUid());
+            jog.put("username", currentUser.getDisplayName());
+            jog.put("points", points);
+            jog.put("createdAt", FieldValue.serverTimestamp());
 
-        db.collection("jogs")
-                .add(jog)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                        /*documentReference.get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        // Jog mJog = documentSnapshot.toObject(Jog.class);
-                                        Jog mJog = new Jog();
-                                        mJog.title = (String) jog.get(title);
-                                        mJog.uid = (String) jog.get("uid");
-                                        mJog.username = (String) jog.get("username");
-                                        mJog.points = (ArrayList<GeoPoint>) jog.get("points");
-                                        mJog.createdAt = (Timestamp) documentSnapshot.get("createdAt");
-                                        getActivity().getSupportFragmentManager()
-                                                .beginTransaction()
-                                                .replace(R.id.containerView, ViewJogFragment.newInstance(mJog))
-                                                .commit();
-                                    }
-                                });*/
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                            fm.popBackStack();
+            db.collection("jogs")
+                    .add(jog)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                            FragmentManager fm = getActivity().getSupportFragmentManager();
+                            for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                                fm.popBackStack();
+                            }
+                            fm.beginTransaction()
+                                    .replace(R.id.containerView, new JogsFragment())
+                                    .commit();
                         }
-                        fm.beginTransaction()
-                        .replace(R.id.containerView, new JogsFragment())
-                        .commit();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-
-
-
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                        }
+                    });
+        } catch (Exception ex) {
+            Log.d(TAG, "stopLocationUpdates: " + ex.getMessage());
+        } finally {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                fm.popBackStack();
+            }
+            fm.beginTransaction()
+                    .replace(R.id.containerView, new JogsFragment())
+                    .commit();
+        }
     }
 
 }

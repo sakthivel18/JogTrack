@@ -219,15 +219,18 @@ public class JogsFragment extends Fragment {
 
             // Get element from your dataset at this position and replace the
             // contents of the view with that element
-            Jog jog = jogs.get(position);
-            viewHolder.jog = jog;
-            viewHolder.listener = this.listener;
-            viewHolder.textViewJogTitle.setText(jog.title);
-            viewHolder.textViewUsername.setText(jog.username);
+            try {
+                Jog jog = jogs.get(position);
+                viewHolder.jog = jog;
+                viewHolder.listener = this.listener;
+                viewHolder.textViewJogTitle.setText(jog.title);
+                viewHolder.textViewUsername.setText(jog.username);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm aaa");
-            viewHolder.textViewJogTime.setText(sdf.format(jog.createdAt.toDate()));
-
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm aaa");
+                viewHolder.textViewJogTime.setText(sdf.format(jog.createdAt.toDate()));
+            } catch (Exception ex) {
+                Log.d(TAG, "onBindViewHolder: " + ex.getMessage());
+            }
         }
 
         // Return the size of your dataset (invoked by the layout manager)
